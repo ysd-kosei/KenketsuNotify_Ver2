@@ -95,7 +95,7 @@ try:
         write_last_value(message)
         print("差分あり → 通知＆last_value更新")
     else:
-       send_line_kosei(f"[変更がありませんでした]\n\n{message}")
+       send_line_kosei(f"[変更はありませんでした]\n\n{message}")
        print("差分なし → 通知のみ")
 
 except Exception as e:
