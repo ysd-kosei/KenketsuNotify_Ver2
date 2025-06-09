@@ -63,7 +63,7 @@ try:
     article = soup.find("article", class_="mod-top-user-date")
     
     if article is None:
-    raise Exception("予約情報が取得できませんでした。ページ構造が変わっている可能性があります。")
+        raise Exception("予約情報が取得できませんでした。ページ構造が変わっている可能性があります。")
 
     dt_elements = article.find_all("dt")
     dd_elements = article.find_all("dd")
