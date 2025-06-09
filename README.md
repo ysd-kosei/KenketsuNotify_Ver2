@@ -1,1 +1,3 @@
 # KenketsuNotify_Ver2
+
+KENKEtsuNotifyをバージョンアップ。日時に変更ない時だけ通知するというもの
