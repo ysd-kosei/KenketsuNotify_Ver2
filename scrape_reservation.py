@@ -5,17 +5,32 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 from bs4 import BeautifulSoup
 from line import send_line_kosei
+import os
 
 # ユーザー情報（ここに実際の情報を入力してください）
 KENKETSUSHA_CODE = "3698193495"
 PASSWORD = "Donate20"
+
+#保存ファイル名
+LAST_VALUE_FILE = "last_value.txt"
+
+
+def read_last_value():
+    if not os.path.exists(LAST_VALUE_FILE):
+        return None
+    with open(LAST_VALUE_FILE, "r", encoding="utf-8") as f:
+        return f.read().strip()
+
+def write_last_value(value):
+    with open(LAST_VALUE_FILE, "w", encoding="utf-8") as f:
+        f.write(value)
+
 
 # Chrome起動オプション（ヘッドレスにも対応可能）
 options = webdriver.ChromeOptions()
 options.add_argument('--headless')  # 必要ならヘッドレスモードを有効化
 options.add_argument('--no-sandbox')
 options.add_argument('--disable-dev-shm-usage')
-
 driver = webdriver.Chrome(options=options)
 
 try:
@@ -62,11 +77,23 @@ try:
             data["type"] =value
         elif key=="場所":
             data["place"] = value
-    
+
     print(data)
     
     # メッセージ形式に整形
     message = f"予約情報:\n{data['datetime']}\n{data['type']}\n{data['place']}"
+    
+    last_message = read_last_value()
+
+
+    if message != last_message:
+        diff_message = f"[変更がありました]\n\n--- 前回 ---\n{last_message or '（なし）'}\n\n--- 今回 ---\n{message}"
+        send_line_kosei(diff_message)
+        write_last_value(message)
+        print("差分あり → 通知＆last_value更新")
+    else:
+       send_line_kosei("[変更はありませんでした]")
+       print("差分なし → 通知のみ")
 
     # LINE送信
     send_line_kosei(message)
