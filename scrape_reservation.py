@@ -61,6 +61,9 @@ try:
 
     soup = BeautifulSoup(html_source, "html.parser")
     article = soup.find("article", class_="mod-top-user-date")
+    
+    if article is None:
+    raise Exception("予約情報が取得できませんでした。ページ構造が変わっている可能性があります。")
 
     dt_elements = article.find_all("dt")
     dd_elements = article.find_all("dd")
@@ -94,9 +97,6 @@ try:
     else:
        send_line_kosei("[変更はありませんでした]")
        print("差分なし → 通知のみ")
-
-    # LINE送信
-    send_line_kosei(message)
 
 except Exception as e:
     print(f"エラーが発生しました: {e}")
