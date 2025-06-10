@@ -1,4 +1,4 @@
-name: Notify on Change
+#name: Notify on Change
 
 on:
   schedule:
